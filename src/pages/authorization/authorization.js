@@ -1,14 +1,19 @@
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
-import { AuthFormError, Input, Button, H2 } from '../../components';
-import { useAuth, useResetForm } from '../../hooks';
+import { Error} from '../../components';
+import { useResetForm } from '../../hooks';
 import { Navigate } from 'react-router-dom';
-import styled from 'styled-components';
+import Typography from '@mui/material/Typography';
 import { setUser } from '../../actions';
 import { request } from '../../utils/request';
+import TextField from '@mui/material/TextField';
+import { Button, Container } from '@mui/material';
+import Box from '@mui/material/Box';
+import { selectUserToken } from '../../selectors';
+
 
 const authFormSchema = yup.object().shape({
 	login: yup
@@ -28,7 +33,7 @@ const authFormSchema = yup.object().shape({
 		.max(30, 'Неверно заполнен пароль. Максимум 30 символов'),
 });
 
-const AuthorizationContainer = ({ className }) => {
+export const Authorization = () => {
 	const {
 		register,
 		reset,
@@ -48,21 +53,24 @@ const AuthorizationContainer = ({ className }) => {
 
 	useResetForm(reset);
 
-
-	const {isAuth, token} = useAuth();
+	const token = useSelector(selectUserToken);
 
 	const onSubmit = ({ login, password }) => {
-		request('https://test.v5.pryaniky.com/ru/data/v3/testmethods/docs/login', token, 'POST', {login, password})
-
+		request(
+			'https://test.v5.pryaniky.com/ru/data/v3/testmethods/docs/login',
+			token,
+			'POST',
+			{ login, password },
+		)
 			.then((user) => {
-				console.log(user)
+				console.log(user);
 				dispatch(setUser(user.data));
 				sessionStorage.setItem('userData', JSON.stringify(user.data));
 			})
 
-			.catch((error) => {
-				if (error) {
-					setServerError(`Ошибка запроса: ${error}`);
+			.then((user) => {
+				if (!user) {
+					setServerError(`Ошибка запроса: проверьте правильность логина и пароля`);
 					return;
 				}
 			});
@@ -72,46 +80,62 @@ const AuthorizationContainer = ({ className }) => {
 
 	const errorMessage = formError || serverError;
 
-	if (isAuth) {
-		return <Navigate to="/" />
+
+	if (token) {
+		return <Navigate to="/" />;
 	} else {
+		return (
+			<Container sx={{
+				width: '17rem',
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'center',
+				justifyContent: 'space-between',
+				marginTop: '7rem'
+			  }}>
+				<Typography sx={{
+					marginBottom: '2rem'
+				}} variant='h4'>Авторизация</Typography>
+				<Box
+				component='form'
+				sx={{
+					display: 'flex',
+					flexDirection: 'column',
+					'& .MuiTextField-root': { width: '25ch' },
+				  }}
+				  noValidate
+				  autoComplete="off"
+				onSubmit={handleSubmit(onSubmit)}>
+					<TextField
+					sx={{
+						marginBottom: '2rem'
+					}}
 
-	return (
-		<div className={className}>
-			<H2>Авторизация</H2>
-			<form onSubmit={handleSubmit(onSubmit)}>
-				<Input
-					type="text"
-					placeholder="Логин..."
-					{...register('login', {
-						onChange: () => setServerError(null),
-					})}
-				/>
-				<Input
-					type="password"
-					placeholder="Пароль..."
-					{...register('password', {
-						onChange: () => setServerError(null),
-					})}
-				/>
-				<Button type="submit" disabled={!!formError}>
-					Авторизоваться
-				</Button>
-				{errorMessage && <AuthFormError>{errorMessage}</AuthFormError>}
-			</form>
-		</div>
-	);
-};
-};
-
-export const Authorization = styled(AuthorizationContainer)`
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-
-	& > form {
-		width: 260px;
-		display: flex;
-		flex-direction: column;
+						label="Login"
+						type="text"
+						placeholder="Логин..."
+						{...register('login', {
+							onChange: () => setServerError(null),
+						})}
+					/>
+					<TextField
+					sx={{
+						marginBottom: '2rem'
+					}}
+						id="outlined-password-input"
+						label="Password"
+						type="password"
+						placeholder="Пароль..."
+						{...register('password', {
+							onChange: () => setServerError(null),
+						})}
+					/>
+					<Button type="submit" disabled={!!formError}>
+						Авторизоваться
+					</Button>
+					{errorMessage && <Error>{errorMessage}</Error>}
+				</Box>
+			</Container>
+		);
 	}
-`;
+};

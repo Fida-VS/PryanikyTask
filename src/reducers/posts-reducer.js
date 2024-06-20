@@ -1,6 +1,4 @@
-const initialPostsState = {
-
-};
+const initialPostsState = {};
 
 export const postsReducer = (state = initialPostsState, action) => {
 	switch (action.type) {

@@ -1,21 +1,15 @@
-import styled from 'styled-components';
+
 //import { ControlPanel } from '../control-panel/control-panel';
 import { useState } from 'react';
-import { Input } from '../input/input';
-import { Button } from '../button/button';
 import { useDispatch, useSelector } from 'react-redux';
 import { removePostAsync, saveEditedPostAsync } from '../../actions';
 import { selectUserToken } from '../../selectors/select-user-token';
+import { Button, ButtonGroup, Container, Paper, TableContainer, Table, TableRow, TableCell, TableBody, TextField } from '@mui/material';
 
 
-const RightAligned = styled.div`
-	display: flex;
-	justify-content: flex-end;
-	align-items: center;
-`;
 
-const TableContainer = ({
-	className,
+export const MyTable = ({
+
 	id,
 	companySigDate,
 	companySignatureName,
@@ -89,170 +83,283 @@ const TableContainer = ({
 
 	if (!isEditing) {
 	return (
-		<div className={className}>
-			<RightAligned>
+		<Container sx={{marginTop: '2rem', marginBottom: '2rem'}}>
+			<ButtonGroup variant="outlined" aria-label="Basic button group">
 			<Button type="button" onClick={onPostEdit}>
 					Edit
 				</Button>
 				{buttons}
-				<Button type="button" onClick={() => onPostRemove(id)}>
+
+				</ButtonGroup>
+				<Button variant='outlined' type="button" onClick={() => onPostRemove(id)}>
 					X
 				</Button>
-				</RightAligned>
-			<table>
-				<tbody>
-			<tr>
-				<td>companySigDate</td>
-				<td>{companySigDateValue}</td>
-			</tr>
-			<tr>
-				<td>companySignatureName</td>
-				<td>{companySignatureNameValue}</td>
-			</tr>
-			<tr>
-				<td>documentName</td>
-				<td>{documentNameValue}</td>
-			</tr>
-			<tr>
-				<td>documentStatus</td>
-				<td>{documentStatusValue}</td>
-			</tr>
-			<tr>
-				<td>documentType</td>
-				<td>{documentTypeValue}</td>
-			</tr>
-			<tr>
-				<td>employeeNumber</td>
-				<td>{employeeNumberValue}</td>
-			</tr>
-			<tr>
-				<td>employeeSigDate</td>
-				<td>{employeeSigDateValue}</td>
-			</tr>
-			<tr>
-				<td>employeeSignatureName</td>
-				<td>{employeeSignatureNameValue}</td>
-			</tr>
-				</tbody>
-			</table>
-		</div>
+				<TableContainer component={Paper}>
+				<Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+				<TableBody>
+                        <TableRow
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                            <TableCell component="th" scope="row">
+                                Company sig date
+                            </TableCell>
+                            <TableCell align="right">
+                                {companySigDateValue.substring(0, 16).replace('T', ' ')}
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                            <TableCell component="th" scope="row">
+                                Company signature name
+                            </TableCell>
+                            <TableCell align="right">
+                                {companySignatureNameValue}
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow>
+                            <TableCell component="th" scope="row">
+                                Document name
+                            </TableCell>
+                            <TableCell align="right">
+                                {documentNameValue}
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                            <TableCell component="th" scope="row">
+                                Document status
+                            </TableCell>
+                            <TableCell align="right">
+                                {documentStatusValue}
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                            <TableCell component="th" scope="row">
+                                Document type
+                            </TableCell>
+                            <TableCell align="right">
+                                {documentTypeValue}
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                            <TableCell component="th" scope="row">
+                                Employee number
+                            </TableCell>
+                            <TableCell align="right">
+                                {employeeNumberValue}
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                            <TableCell component="th" scope="row">
+                                Employee sig date
+                            </TableCell>
+                            <TableCell align="right">
+                                {employeeSigDateValue.substring(0, 16).replace('T', ' ')}
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                            <TableCell component="th" scope="row">
+                                Employee signature name
+                            </TableCell>
+                            <TableCell align="right">
+                                {employeeSignatureNameValue}
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+
+				</Table>
+			</TableContainer>
+		</Container>
 		);
 	} else {
 		return (
-			<div className={className}>
-				<RightAligned>
+			<Container sx={{marginTop: '2rem', marginBottom: '2rem'}}>
+				<ButtonGroup variant="outlined" aria-label="Basic button group">
 			<Button type="button" onClick={onPostEdit}>
 					Edit
 				</Button>
 				{buttons}
-				<Button type="button" onClick={() => onPostRemove(id)}>
+
+				</ButtonGroup>
+				<Button variant='outlined' type="button" onClick={() => onPostRemove(id)}>
 					X
 				</Button>
-				</RightAligned>
-			<table>
-				<tbody>
-			<tr>
-				<td>companySigDate</td>
-				<td><Input
-					type="date"
-					name="CompanySigDate"
-					value={companySigDateValue}
-					onChange={onInputChange1}
-				/></td>
-			</tr>
-			<tr>
-				<td>companySignatureName</td>
-				<td><Input
-					type="text"
-					name="CompanySignatureName"
-					value={companySignatureNameValue}
-					onChange={onInputChange2}
-				/></td>
-			</tr>
-			<tr>
-				<td>documentName</td>
-				<td><Input
-					type="text"
-					name="DocumentName"
-					value={documentNameValue}
-					onChange={onInputChange3}
-				/></td>
-			</tr>
-			<tr>
-				<td>documentStatus</td>
-				<td><Input
-					type="text"
-					name="DocumentStatusValue"
-					value={documentStatusValue}
-					onChange={onInputChange4}
-				/></td>
-			</tr>
-			<tr>
-				<td>documentType</td>
-				<td><Input
-					type="text"
-					name="DocumentTypeValue"
-					value={documentTypeValue}
-					onChange={onInputChange5}
-				/></td>
-			</tr>
-			<tr>
-				<td>employeeNumber</td>
-				<td><Input
-					type="text"
-					name="EmployeeNumberValue"
-					value={employeeNumberValue}
-					onChange={onInputChange6}
-				/></td>
-			</tr>
-			<tr>
-				<td>employeeSigDate</td>
-				<td><Input
-					type="date"
-					name="EmployeeSigDateValue"
-					value={employeeSigDateValue}
-					onChange={onInputChange7}
-				/></td>
-			</tr>
-			<tr>
-				<td>employeeSignatureName</td>
-				<td><Input
-					type="text"
-					name="EmployeeSignatureNameValue"
-					value={employeeSignatureNameValue}
-					onChange={onInputChange8}
-				/></td>
-			</tr>
-				</tbody>
-			</table>
-		</div>
+				<TableContainer component={Paper}>
+				<Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+				<TableBody>
+						<TableRow
+							sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+						>
+							<TableCell component="th" scope="row">
+								Company sig date
+							</TableCell>
+							<TableCell align="right">
+								<TextField
+								fullWidth
+								id="fullWidth"
+									size="small"
+									type="date"
+									name="CompanySigDate"
+									value={companySigDateValue}
+									onChange={onInputChange1}
+								/>
+							</TableCell>
+						</TableRow>
+
+						<TableRow
+							sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+						>
+							<TableCell component="th" scope="row">
+								Company signature name
+							</TableCell>
+							<TableCell align="right">
+								<TextField
+									size="small"
+									fullWidth
+								id="fullWidth"
+									type="text"
+									name="CompanySignatureName"
+									value={companySignatureNameValue}
+									onChange={onInputChange2}
+								/>
+							</TableCell>
+						</TableRow>
+
+						<TableRow>
+							<TableCell component="th" scope="row">
+								Document name
+							</TableCell>
+							<TableCell align="right">
+								<TextField
+								fullWidth
+								id="fullWidth"
+									size="small"
+									type="text"
+									name="DocumentName"
+									value={documentNameValue}
+									onChange={onInputChange3}
+								/>
+							</TableCell>
+						</TableRow>
+
+						<TableRow
+							sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+						>
+							<TableCell component="th" scope="row">
+								Document status
+							</TableCell>
+							<TableCell align="right">
+								<TextField
+								fullWidth
+								id="fullWidth"
+									size="small"
+									type="text"
+									name="DocumentStatusValue"
+									value={documentStatusValue}
+									onChange={onInputChange4}
+								/>
+							</TableCell>
+						</TableRow>
+
+						<TableRow
+							sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+						>
+							<TableCell component="th" scope="row">
+								Document type
+							</TableCell>
+							<TableCell align="right">
+								<TextField
+								fullWidth
+								id="fullWidth"
+									size="small"
+									type="text"
+									name="DocumentTypeValue"
+									value={documentTypeValue}
+									onChange={onInputChange5}
+								/>
+							</TableCell>
+						</TableRow>
+
+						<TableRow
+							sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+						>
+							<TableCell component="th" scope="row">
+								Employee number
+							</TableCell>
+							<TableCell align="right">
+								<TextField
+								fullWidth
+								id="fullWidth"
+									size="small"
+									type="text"
+									name="EmployeeNumberValue"
+									value={employeeNumberValue}
+									onChange={onInputChange6}
+								/>
+							</TableCell>
+						</TableRow>
+
+						<TableRow
+							sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+						>
+							<TableCell component="th" scope="row">
+								Employee sig date
+							</TableCell>
+							<TableCell align="right">
+								<TextField
+								fullWidth
+								id="fullWidth"
+									size="small"
+									type="date"
+									name="EmployeeSigDateValue"
+									value={employeeSigDateValue}
+									onChange={onInputChange7}
+								/>
+							</TableCell>
+						</TableRow>
+
+						<TableRow
+							sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+						>
+							<TableCell component="th" scope="row">
+								Employee signature name
+							</TableCell>
+							<TableCell align="right">
+								<TextField
+								fullWidth
+								id="fullWidth"
+									size="small"
+									type="text"
+									name="EmployeeSignatureNameValue"
+									value={employeeSignatureNameValue}
+									onChange={onInputChange8}
+								/>
+							</TableCell>
+						</TableRow>
+					</TableBody>
+			</Table>
+			</TableContainer>
+		</Container>
 		)
 	}
 };
 
-export const Table = styled(TableContainer)`
-	margin-bottom: 30px;
 
-	& table {
-		width: 100%;
-		border-collapse: collapse;
-		border-spacing: 0;
-		height: auto;
-	}
 
-	& td,
-	th {
-		border: 1px solid #595959;
-	}
-	& td,
-	th {
-		padding: 3px;
-		width: 30px;
-		height: 35px;
-	}
-	& th {
-		background: #347c99;
-		color: #fff;
-		font-weight: normal;
-	}
-`;

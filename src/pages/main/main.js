@@ -1,16 +1,18 @@
 import { useSelector } from 'react-redux';
-import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { Table } from '../../components/table/table';
+import { Error, MyTable } from '../../components';
 import { request } from '../../utils/request';
 import { selectFormIsOpen, selectUserToken } from '../../selectors';
-import { PostForm } from '../../components';
-//import { useAuth } from '../../hooks';
+import { Header, PostForm } from '../../components';
 import { Navigate } from 'react-router';
+import { Container, Typography } from '@mui/material';
+import { Loader } from '../../components';
 //import { selectUserToken } from '../../selectors/select-user-token';
 
-const MainContainer = ({ className }) => {
+export const Main = () => {
 	const [posts, setPosts] = useState([]);
+
+	const [serverError, setServerError] = useState(null);
 
 	const isOpen = useSelector(selectFormIsOpen);
 
@@ -23,11 +25,10 @@ const MainContainer = ({ className }) => {
 			request('https://test.v5.pryaniky.com/ru/data/v3/testmethods/docs/userdocs/get', token)
 				.then(({ data: posts }) => {
 					setPosts(posts);
-
 				})
 				.catch((error) => {
 					if (error) {
-						console.log(`Ошибка запроса: ${error}`);
+						setServerError(`Ошибка запроса: ${error}`);
 						return;
 					}
 				});
@@ -37,9 +38,14 @@ const MainContainer = ({ className }) => {
 
 
 	return token ? (
-		<div className={className}>
-			<div>Главная</div>
+
+
+		<Container maxWidth='md'>
+			<Header />
+
 			<div>
+
+			{serverError && <Error>{serverError}</Error>}
 				{posts.length > 0 ? (
 					<div className="post-list">
 						{posts.map(
@@ -54,7 +60,7 @@ const MainContainer = ({ className }) => {
 								employeeSigDate,
 								employeeSignatureName,
 							}) => (
-								<Table
+								<MyTable
 									key={id}
 									id={id}
 									companySigDate={companySigDate}
@@ -70,17 +76,14 @@ const MainContainer = ({ className }) => {
 						)}
 					</div>
 				) : (
-					<div className="no-posts-found">Статьи не найдены</div>
+				<Container sx={{display: 'flex', alignItems: 'center',
+					justifyContent: 'center'}}><Loader/><Typography sx={{marginTop: '7rem', justifyContent: 'space-between'}} variant="h5">Статьи не найдены</Typography></Container>
 				)}
 			</div>
 			{isOpen && <PostForm />}
-		</div>
+		</Container>
 	): (
 		 <Navigate to="/login" />
 	)
 };
 
-export const Main = styled(MainContainer)`
-width: 70%;
-margin: 0 auto;
-`;

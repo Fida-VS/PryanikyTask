@@ -21,15 +21,6 @@ export const appReducer = (state = initialAppState, action) => {
 				...state,
 				wasLogout: !state.wasLogout,
 			};
-		case ACTION_TYPE.OPEN_MODAL:
-			return {
-				...state,
-				modal: {
-					...state.modal,
-					...action.payload,
-					isOpen: true,
-				},
-			};
 			case ACTION_TYPE.OPEN_FORM:
 			return {
 				...state,
@@ -39,8 +30,8 @@ export const appReducer = (state = initialAppState, action) => {
 					isOpen: true,
 				},
 			};
-		case ACTION_TYPE.CLOSE_MODAL:
-			return initialAppState;
+			case ACTION_TYPE.CLOSE_FORM:
+				return initialAppState;
 		default:
 			return state;
 	}

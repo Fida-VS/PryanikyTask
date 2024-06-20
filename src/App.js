@@ -1,11 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
-import { Error, Header } from './components';
+import { Error } from './components';
 import { Authorization, Main} from './pages';
 //import styled from 'styled-components';
 import { useLayoutEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from './actions';
 import { ERROR } from './constants';
+import { Container } from '@mui/material';
 
 
 
@@ -24,22 +25,18 @@ export const App = () => {
 
 		const currentUserData = JSON.parse(currentUserDataJSON);
 
-		const token = currentUserData.token;
-		console.log(token)
-
 		dispatch(setUser(currentUserData));
 	}, [dispatch]);
 
 
 	return (
-		<>
-		    <Header />
+		<Container>
 				<Routes>
 					<Route path="/" element={<Main />} />
 					<Route path="/login" element={<Authorization/>} />
-					<Route path="*" element={<Error error={ERROR.PAGE_NOT_EXIST}/>} />
+					<Route path="*" element={<Error>{ERROR.PAGE_NOT_EXIST}</Error>} />
 				</Routes>
-				</>
+				</Container>
 	);
 };
 

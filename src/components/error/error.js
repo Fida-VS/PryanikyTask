@@ -1,18 +1,10 @@
-import { H2 } from '../h2/h2';
-import styled from 'styled-components';
+import { Alert, Stack } from "@mui/material";
 
-const Div = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	font-size: 18px;
-`;
 
-export const Error = ({ error }) =>
-	error && (
-		<Div>
-			<H2>Ошибка</H2>
-			<div>{error}</div>
-		</Div>
-	);
-
+export const Error = ({children}) => {
+	return (
+		<Stack sx={{ width: '100%' }} spacing={1}>
+		  <Alert severity="error">{children}</Alert>
+		</Stack>
+	  );
+}
