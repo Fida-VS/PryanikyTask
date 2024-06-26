@@ -1,16 +1,15 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { Error, MyTable } from '../../components';
-import { request } from '../../utils/request';
-import { selectFormIsOpen, selectUserToken } from '../../selectors';
+import { selectFormIsOpen, selectPosts, selectUserToken } from '../../selectors';
 import { Header, PostForm } from '../../components';
 import { Navigate } from 'react-router';
 import { Container, Typography } from '@mui/material';
 import { Loader } from '../../components';
-//import { selectUserToken } from '../../selectors/select-user-token';
+import { loadPostsAsync } from '../../actions';
+
 
 export const Main = () => {
-	const [posts, setPosts] = useState([]);
 
 	const [serverError, setServerError] = useState(null);
 
@@ -18,34 +17,32 @@ export const Main = () => {
 
 	const token = useSelector(selectUserToken);
 
+	const posts = useSelector(selectPosts);
 
 
+
+	const dispatch = useDispatch();
 
 	useEffect(() => {
-			request('https://test.v5.pryaniky.com/ru/data/v3/testmethods/docs/userdocs/get', token)
-				.then(({ data: posts }) => {
-					setPosts(posts);
-				})
-				.catch((error) => {
-					if (error) {
-						setServerError(`Ошибка запроса: ${error}`);
-						return;
-					}
-				});
-		}, [posts, token]);
+			dispatch(loadPostsAsync(token))
+			.catch((error) => {
+				if (error) {
+					setServerError(`Ошибка запроса: ${error}`);
+					return;
+				}
+			});
+		}, [dispatch]);
 
 
 
 
 	return token ? (
 
-
 		<Container maxWidth='md'>
+
 			<Header />
-
-			<div>
-
 			{serverError && <Error>{serverError}</Error>}
+			<Container>
 				{posts.length > 0 ? (
 					<div className="post-list">
 						{posts.map(
@@ -79,7 +76,7 @@ export const Main = () => {
 				<Container sx={{display: 'flex', alignItems: 'center',
 					justifyContent: 'center'}}><Loader/><Typography sx={{marginTop: '7rem', justifyContent: 'space-between'}} variant="h5">Статьи не найдены</Typography></Container>
 				)}
-			</div>
+			</Container>
 			{isOpen && <PostForm />}
 		</Container>
 	): (

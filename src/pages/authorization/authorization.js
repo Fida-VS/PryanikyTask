@@ -56,6 +56,7 @@ export const Authorization = () => {
 	const token = useSelector(selectUserToken);
 
 	const onSubmit = ({ login, password }) => {
+
 		request(
 			'https://test.v5.pryaniky.com/ru/data/v3/testmethods/docs/login',
 			token,
@@ -63,11 +64,10 @@ export const Authorization = () => {
 			{ login, password },
 		)
 			.then((user) => {
-				console.log(user);
+				console.log(user)
 				dispatch(setUser(user.data));
 				sessionStorage.setItem('userData', JSON.stringify(user.data));
 			})
-
 			.then((user) => {
 				if (!user) {
 					setServerError(`Ошибка запроса: проверьте правильность логина и пароля`);

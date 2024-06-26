@@ -2,6 +2,7 @@ import { ACTION_TYPE } from "../actions";
 
 
 const initialUserState = {
+	login: null,
 	token: null,
 };
 

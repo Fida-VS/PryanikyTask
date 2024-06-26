@@ -81,8 +81,8 @@ export const MyTable = ({
 		</>
 	  ) : null;
 
-	if (!isEditing) {
-	return (
+	 return !isEditing ? (
+
 		<Container sx={{marginTop: '2rem', marginBottom: '2rem'}}>
 			<ButtonGroup variant="outlined" aria-label="Basic button group">
 			<Button type="button" onClick={onPostEdit}>
@@ -187,9 +187,7 @@ export const MyTable = ({
 				</Table>
 			</TableContainer>
 		</Container>
-		);
-	} else {
-		return (
+		) : (
 			<Container sx={{marginTop: '2rem', marginBottom: '2rem'}}>
 				<ButtonGroup variant="outlined" aria-label="Basic button group">
 			<Button type="button" onClick={onPostEdit}>
@@ -358,7 +356,7 @@ export const MyTable = ({
 			</TableContainer>
 		</Container>
 		)
-	}
+	
 };
 
 
